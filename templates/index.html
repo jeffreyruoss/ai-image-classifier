@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Classification</h1>
+        <div class="file-input-wrapper">
+            <input type="file" id="image-input">
+        </div>
+        <button onclick="classifyImage()">Classify</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function classifyImage() {
+            const input = document.getElementById('image-input');
+            if (!input.files.length) {
+                alert('Please select an image');
+                return;
+            }
+
+            const image = input.files[0];
+            const formData = new FormData();
+            formData.append('image', image);
+
+            const response = await fetch('/classify', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById('result').textContent = 'The image is classified as: ' + data.class_name;
+        }
+    </script>
+</body>
+</html>
